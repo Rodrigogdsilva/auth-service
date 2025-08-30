@@ -6,16 +6,16 @@
 
 ## 📖 Sobre o Projeto
 
-[cite_start]Este projeto consiste em um microsserviço de autenticação e gerenciamento de usuários, desenvolvido em Go como parte de um sistema de e-commerce simplificado. [cite: 4] [cite_start]O objetivo principal é exercitar conceitos de arquiteturas distribuídas, como comunicação entre serviços, contratos de API, segurança e persistência de dados. [cite: 5]
+Este projeto consiste em um microsserviço de autenticação e gerenciamento de usuários, desenvolvido em Go como parte de um sistema de e-commerce simplificado. O objetivo principal é exercitar conceitos de arquiteturas distribuídas, como comunicação entre serviços, contratos de API, segurança e persistência de dados.
 
 O serviço é totalmente containerizado com Docker, utiliza PostgreSQL para persistência de dados e `golang-migrate` para o versionamento do schema do banco de dados.
 
 ### ✨ Funcionalidades Principais
-* [cite_start]**Cadastro de Usuários:** Endpoint público para criação de novas contas. [cite: 32]
-* [cite_start]**Autenticação com JWT:** Geração de JSON Web Tokens no login para autenticação stateless. [cite: 32]
-* [cite_start]**Gerenciamento de Perfil:** Endpoint protegido para consulta de dados do usuário autenticado. [cite: 32]
-* [cite_start]**Validação Centralizada de Token:** Endpoint interno para que outros microsserviços possam validar tokens. [cite: 15, 32]
-* [cite_start]**Segurança Serviço-a-Serviço:** Endpoints internos protegidos por API Key. [cite: 20]
+* **Cadastro de Usuários:** Endpoint público para criação de novas contas. 
+* **Autenticação com JWT:** Geração de JSON Web Tokens no login para autenticação stateless. 
+* **Gerenciamento de Perfil:** Endpoint protegido para consulta de dados do usuário autenticado.
+* **Validação Centralizada de Token:** Endpoint interno para que outros microsserviços possam validar tokens. 
+* **Segurança Serviço-a-Serviço:** Endpoints internos protegidos por API Key.
 
 ## 🛠️ Arquitetura e Tecnologias
 
@@ -51,23 +51,23 @@ auth-service/
 ## 📜 Documentação da API
 
 ### `POST /register`
-* [cite_start]**Descrição:** Cadastra um novo usuário. [cite: 32]
+* **Descrição:** Cadastra um novo usuário.
 * **Autenticação:** Nenhuma
 * **Corpo:** `{ "name": "string", "email": "string", "password": "string" }`
 
 ### `POST /login`
-* [cite_start]**Descrição:** Autentica um usuário e retorna um token JWT. [cite: 32]
+* **Descrição:** Autentica um usuário e retorna um token JWT. 
 * **Autenticação:** Nenhuma
 * **Corpo:** `{ "email": "string", "password": "string" }`
 
 ### `GET /profile`
-* [cite_start]**Descrição:** Retorna o perfil do usuário autenticado. [cite: 32]
+* **Descrição:** Retorna o perfil do usuário autenticado. 
 * **Autenticação:** JWT Obrigatória (`Authorization: Bearer <token>`)
 
 ### `POST /auth/validate`
-* [cite_start]**Descrição:** (Uso Interno) Valida um token JWT para outros serviços. [cite: 32]
+* **Descrição:** (Uso Interno) Valida um token JWT para outros serviços. 
 * **Autenticação:** API Key Interna (`X-Internal-Api-Key: <chave>`)
-* [cite_start]**Corpo:** `{ "token": "string" }` [cite: 40]
+* **Corpo:** `{ "token": "string" }`
 
 ## 🚀 Como Executar o Projeto
 
