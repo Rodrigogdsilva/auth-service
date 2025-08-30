@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: auth-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: auth-app
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  migrator:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./database:/migrations
+    depends_on:
+      - db
+    entrypoint: ["migrate"]
+
+  adminer:
+    image: adminer
+    container_name: auth-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data: {}
