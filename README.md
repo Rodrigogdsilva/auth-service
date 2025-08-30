@@ -31,22 +31,7 @@ O projeto segue uma arquitetura em camadas para uma clara separação de respons
 
 ### Estrutura de Diretórios
 
-auth-service/
-├── database/         # Arquivos de migration SQL
-├── src/
-│   ├── api/          # Camada HTTP (Handlers, Middlewares)
-│   ├── cmd/          # Ponto de entrada da aplicação
-│   ├── config/       # Gerenciamento de configuração
-│   ├── domain/       # Modelos de dados principais
-│   ├── repository/   # Camada de acesso a dados (PostgreSQL)
-│   ├── server/       # Configuração do servidor HTTP
-│   └── service/      # Camada de lógica de negócio
-├── .env              # Arquivo de variáveis de ambiente (local)
-├── .gitignore
-├── docker-compose.yml # Orquestração dos containers
-├── Dockerfile        # Dockerfile unificado para app e migrations
-├── go.mod
-└── Makefile          # Comandos de automação
+<img width="580" height="408" alt="image" src="https://github.com/user-attachments/assets/513e61d5-a3e4-4d4e-b1d9-a63cad2bc380" />
 
 ## 📜 Documentação da API
 
