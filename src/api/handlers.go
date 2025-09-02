@@ -127,5 +127,7 @@ func (h *Handler) HandleAuthValidate(w http.ResponseWriter, r *http.Request) {
 func WriteJSON(w http.ResponseWriter, status int, v interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v)
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		log.Printf("Failed to write JSON response: %v", err)
+	}
 }

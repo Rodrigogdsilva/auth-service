@@ -27,3 +27,13 @@ migrate-down:
 create-migration:
 	@read -p "Digite o nome da migration: " name; \
 	migrate create -ext sql -dir ./database -seq $$name
+
+vulncheck:
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	govulncheck ./...
+
+lint:
+	golangci-lint run
+
+gitleaks:
+	docker run --rm -v $(PWD):/path zricethezav/gitleaks:latest detect --source=/path --verbose
