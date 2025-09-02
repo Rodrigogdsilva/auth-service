@@ -14,18 +14,18 @@ import (
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("Arquivo .env não encontrado, usando variáveis de ambiente do sistema.")
+		log.Println(".env file not found, using system environment variables.")
 	}
 	cfg := config.Load()
 
 	pool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
 	if err != nil {
-		log.Fatalf("Falha ao conectar com o PostgreSQL: %v", err)
+		log.Fatalf("Failed to connect to PostgreSQL: %v", err)
 	}
 	defer pool.Close()
-	log.Println("Conectado ao PostgreSQL com sucesso.")
+	log.Println("Successfully connected to PostgreSQL.")
 
-	userRepo := repository.NewPostgresUserRepository(pool)
+	userRepo := repository.NewUser(pool)
 	userService := service.NewUserService(userRepo, cfg.JWTSecret)
 	httpServer := server.NewServer(cfg, userService)
 

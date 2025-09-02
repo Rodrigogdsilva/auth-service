@@ -5,7 +5,7 @@ import (
 	"auth-service/src/jwt"
 	"auth-service/src/repository"
 	"context"
-	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -30,15 +30,15 @@ func NewUserService(repo repository.UserRepository, jwtSecret string) UserServic
 
 func (s *userService) Register(ctx context.Context, name, email, password string) (*domain.User, error) {
 	if name == "" || email == "" || password == "" {
-		return nil, errors.New("nome, email e senha são obrigatórios")
+		return nil, domain.ErrParametersMissing
 	}
 	if len(password) < 8 {
-		return nil, errors.New("senha deve ter no mínimo 8 caracteres")
+		return nil, domain.ErrPasswordTooShort
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, errors.New("falha ao criptografar senha")
+		return nil, fmt.Errorf("failed to hash password: %w", domain.ErrFailedHashingPassword)
 	}
 
 	user := &domain.User{
@@ -58,10 +58,10 @@ func (s *userService) Register(ctx context.Context, name, email, password string
 func (s *userService) Login(ctx context.Context, email, password string) (string, error) {
 	user, err := s.repo.FindByEmail(ctx, email)
 	if err != nil {
-		return "", errors.New("credenciais inválidas")
+		return "", domain.ErrInvalidCredentials
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)); err != nil {
-		return "", errors.New("credenciais inválidas")
+		return "", domain.ErrInvalidCredentials
 	}
 	return jwt.CreateToken(user, s.jwtSecret)
 }

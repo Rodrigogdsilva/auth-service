@@ -21,7 +21,7 @@ type postgresUserRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewPostgresUserRepository(db *pgxpool.Pool) UserRepository {
+func NewUser(db *pgxpool.Pool) UserRepository {
 	return &postgresUserRepository{db: db}
 }
 
@@ -31,9 +31,9 @@ func (r *postgresUserRepository) Create(ctx context.Context, user *domain.User) 
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return errors.New("email already exists")
+			return fmt.Errorf("Error creating user: %w", domain.ErrEmailAlreadyExists)
 		}
-		return fmt.Errorf("erro ao criar usuário no repositório: %w", err)
+		return fmt.Errorf("Error creating user: %w", err)
 	}
 	return nil
 }
@@ -44,9 +44,9 @@ func (r *postgresUserRepository) FindByEmail(ctx context.Context, email string) 
 	err := r.db.QueryRow(ctx, query, email).Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return nil, errors.New("user not found")
+			return nil, fmt.Errorf("Error when searching for user by email: %w", domain.ErrUserNotFound)
 		}
-		return nil, fmt.Errorf("erro ao buscar usuário por email no repositório: %w", err)
+		return nil, fmt.Errorf("Error when searching for user by email: %w", err)
 	}
 	return user, nil
 }
@@ -57,9 +57,9 @@ func (r *postgresUserRepository) FindByID(ctx context.Context, id string) (*doma
 	err := r.db.QueryRow(ctx, query, id).Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash, &user.CreatedAt)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			return nil, errors.New("user not found")
+			return nil, fmt.Errorf("Error when searching for user by ID: %w", domain.ErrUserNotFound)
 		}
-		return nil, fmt.Errorf("erro ao buscar usuário por id no repositório: %w", err)
+		return nil, fmt.Errorf("Error when searching for user by ID: %w", err)
 	}
 	return user, nil
 }
