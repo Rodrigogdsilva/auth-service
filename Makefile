@@ -36,4 +36,8 @@ lint:
 	golangci-lint run
 
 gitleaks:
-	docker run --rm -v $(PWD):/path zricethezav/gitleaks:latest detect --source=/path --verbose
+	docker run --rm -v $(CURDIR):/path zricethezav/gitleaks:latest detect --source=/path --verbose
+
+test:
+	@echo "Rodando os testes..."
+	@go test -v ./...
