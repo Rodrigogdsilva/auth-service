@@ -8,32 +8,57 @@
 
 Este projeto consiste em um microsserviço de autenticação e gerenciamento de usuários, desenvolvido em Go como parte de um sistema de e-commerce simplificado. O objetivo principal é exercitar conceitos de arquiteturas distribuídas, como comunicação entre serviços, contratos de API, segurança e persistência de dados.
 
-O serviço é totalmente containerizado com Docker, utiliza PostgreSQL para persistência de dados e `golang-migrate` para o versionamento do schema do banco de dados.
+[cite_start]O serviço é totalmente containerizado com Docker [cite: 3, 4, 87][cite_start], utiliza PostgreSQL para persistência de dados [cite: 89] e `golang-migrate` para o versionamento do schema do banco de dados. A ênfase é em práticas profissionais, incluindo uma arquitetura limpa em camadas e um robusto tratamento de erros.
 
 ### ✨ Funcionalidades Principais
-* **Cadastro de Usuários:** Endpoint público para criação de novas contas. 
-* **Autenticação com JWT:** Geração de JSON Web Tokens no login para autenticação stateless. 
+* **Cadastro de Usuários:** Endpoint público para criação de novas contas.
+* **Autenticação com JWT:** Geração de JSON Web Tokens no login para autenticação stateless.
 * **Gerenciamento de Perfil:** Endpoint protegido para consulta de dados do usuário autenticado.
-* **Validação Centralizada de Token:** Endpoint interno para que outros microsserviços possam validar tokens. 
+* **Validação Centralizada de Token:** Endpoint interno para que outros microsserviços possam validar tokens.
 * **Segurança Serviço-a-Serviço:** Endpoints internos protegidos por API Key.
+* [cite_start]**Tratamento de Erros Estruturado:** A API retorna erros em formato JSON com códigos padronizados para facilitar a integração com clientes.
+* **Qualidade e Segurança Automatizadas:** Integração com `golangci-lint` (linting), `govulncheck` (análise de vulnerabilidades) e `gitleaks` (detecção de segredos) via `Makefile`.
 
 ## 🛠️ Arquitetura e Tecnologias
 
-O projeto segue uma arquitetura em camadas para uma clara separação de responsabilidades (API, Lógica de Negócio, Repositório).
+[cite_start]O projeto segue uma arquitetura em camadas para uma clara separação de responsabilidades (API, Lógica de Negócio, Repositório)[cite: 85, 86].
 
 ### Tecnologias Utilizadas
 * **Linguagem:** Go
-* **Banco de Dados:** PostgreSQL
-* **Containerização:** Docker & Docker Compose
-* **Roteador HTTP:** Chi
+* [cite_start]**Banco de Dados:** PostgreSQL [cite: 89]
+* [cite_start]**Containerização:** Docker & Docker Compose [cite: 3, 4, 87]
+* [cite_start]**Roteador HTTP:** Chi [cite: 85]
 * **Migrations:** golang-migrate
 * **Automação:** Makefile
 
 ### Estrutura de Diretórios
 
-<img width="580" height="408" alt="image" src="https://github.com/user-attachments/assets/513e61d5-a3e4-4d4e-b1d9-a63cad2bc380" />
+<img width="500" height="452" alt="image" src="https://github.com/user-attachments/assets/a0ced8d3-8314-42d7-b62a-80faa3016885" />
 
 ## 📜 Documentação da API
+
+A API utiliza um formato JSON estruturado para respostas de erro.
+
+### Respostas de Erro
+Todas as respostas de erro (status `4xx` ou `5xx`) seguem o formato abaixo:
+
+{
+  "code": "CODIGO_DO_ERRO",
+  "message": "Uma mensagem descritiva do erro."
+}
+
+**Códigos de Erro Comuns:**
+
+| Status HTTP | Código (`code`) | Descrição |
+| :--- | :--- | :--- |
+| `400 Bad Request` | `INVALID_REQUEST_BODY` | O corpo da requisição é inválido ou malformado. |
+| `400 Bad Request` | `INVALID_INPUT` | Um ou mais campos são inválidos (ex: senha muito curta). |
+| `401 Unauthorized`| `INVALID_CREDENTIALS` | E-mail ou senha incorretos. |
+| `404 Not Found` | `USER_NOT_FOUND` | O usuário solicitado não foi encontrado. |
+| `409 Conflict` | `EMAIL_ALREADY_EXISTS` | O e-mail fornecido no cadastro já está em uso. |
+| `500 Internal Server Error` | `INTERNAL_SERVER_ERROR` | Ocorreu uma falha inesperada no servidor. |
+
+### Endpoints
 
 ### `POST /register`
 * **Descrição:** Cadastra um novo usuário.
@@ -114,6 +139,9 @@ Siga os passos abaixo para colocar o ambiente de desenvolvimento no ar.
 * `make migrate-up`: Aplica todas as migrações pendentes.
 * `make migrate-down`: Reverte a última migração aplicada.
 * `make create-migration`: Cria novos arquivos de migração.
+* `make lint`: Roda o linter golangci-lint para análise estática do código.
+* `make vulncheck`: Roda o govulncheck para buscar vulnerabilidades nas dependências.
+* `make gitleaks`: Roda o gitleaks para buscar segredos commitados acidentalmente.
 
 ## 🗄️ Acesso ao Banco de Dados
 
